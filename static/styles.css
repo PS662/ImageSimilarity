@@ -1,0 +1,12 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+button {
+    padding: 10px 20px;
+    margin: 5px;
+}
+#loading {
+    font-size: 18px;
+    color: blue;
+}

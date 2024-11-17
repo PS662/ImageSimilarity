@@ -1,0 +1,14 @@
+[
+    {
+        "model_type": "resnet50",
+        "model_dim": 2048,
+        "model_id": "resnet50_1",
+        "model_path": "models/resnet50.pth"
+    },
+    {
+        "model_type": "vgg16",
+        "model_dim": 4096,
+        "model_id": "vgg16_1",
+        "model_path": "models/vgg16.pth"
+    }
+]
