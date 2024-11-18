@@ -1,6 +1,7 @@
 import os
+from typing import List
 
-from fastapi import FastAPI, UploadFile, Form, BackgroundTasks
+from fastapi import FastAPI, UploadFile, Form, BackgroundTasks, APIRouter
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.exceptions import HTTPException
@@ -13,9 +14,14 @@ from celery.result import AsyncResult
 from .tasks import search_vector, add_vector
 import asyncio
 
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/temp_catalogue", StaticFiles(directory="temp_catalogue"), name="temp_catalogue")
+app.mount("/config", StaticFiles(directory="config"), name="config")
+
 templates = Jinja2Templates(directory="templates")
+router = APIRouter()
 
 @app.get("/")
 async def read_root(request: Request):  # Use Request from starlette
@@ -36,14 +42,33 @@ async def search_with_image(file: UploadFile):
 
 
 # FIXME: Add base64 encoded upload, progress bar UI
-@app.post("/upload_catalogue")
+@router.post("/upload_catalogue")
 async def upload_catalogue(
-    folder_path: str = Form(...),
-    model_id: str = Form(None)):
+    files: List[UploadFile],
+    model_id: str = Form(None)
+):
     try:
-        task = add_vector.delay(folder_path, model_id)
+        print(f"Files received: {[file.filename for file in files]}")
+        print(f"Model ID: {model_id}")
+
+        temp_folder = "temp_catalogue"
+        os.makedirs(temp_folder, exist_ok=True)
+        print(f"Temporary folder created: {temp_folder}")
+
+        file_paths = []
+        for file in files:
+            filename = os.path.basename(file.filename)
+            temp_path = os.path.join(temp_folder, filename)
+            with open(temp_path, "wb") as f:
+                f.write(await file.read())
+            file_paths.append(temp_path)
+            print(f"File saved: {temp_path}")
+
+        task = add_vector.delay(temp_folder, model_id)
+        print(f"Task scheduled with ID: {task.id}")
         return {"task_id": task.id}
     except Exception as e:
+        print(f"Error in /upload_catalogue: {e}")
         raise HTTPException(status_code=500, detail=f"Task failed: {str(e)}")
 
 
@@ -85,3 +110,4 @@ async def poll_task_status(req_id: str, target_status: str = "SUCCESS", timeout:
         await asyncio.sleep(1)
 
     return {"status": "TIMEOUT", "result": "Task did not complete within the expected time."}
+app.include_router(router)

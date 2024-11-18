@@ -10,8 +10,8 @@ create-db:
 create-user:
 	bash init_db.sh create-user
 
-create-vector-table:
-	bash init_db.sh create-vector-table
+create-vector-extension:
+	bash init_db.sh create-vector-extension
 
 remove-user:
 	bash init_db.sh remove-user
@@ -19,4 +19,4 @@ remove-user:
 remove-db:
 	bash init_db.sh remove-db
 
-init-db: create-db create-vector-table create-user
+init-db: create-db create-vector-extension create-user

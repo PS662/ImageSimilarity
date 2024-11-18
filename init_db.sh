@@ -61,7 +61,7 @@ SQL
 }
 
 # Function to enable pgvector and create embeddings table
-create_vector() {
+create_vector_extension() {
   echo "Enabling pgvector extension in $DB_NAME..."
   psql -h "$DB_HOST" -U "$DB_ADMIN_USER" -p "$DB_PORT" -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS vector;"
   if [[ $? -ne 0 ]]; then
@@ -69,16 +69,6 @@ create_vector() {
     exit 1
   fi
   echo "pgvector extension enabled successfully."
-
-  echo "Creating embeddings table in $DB_NAME..."
-  psql -h "$DB_HOST" -U "$DB_ADMIN_USER" -p "$DB_PORT" -d "$DB_NAME" <<SQL
-CREATE TABLE IF NOT EXISTS embeddings (
-    id SERIAL PRIMARY KEY,
-    vector VECTOR(2048) NOT NULL,
-    model_id VARCHAR(255) NOT NULL
-);
-SQL
-  echo "Embeddings table created successfully."
 }
 
 # Function to remove user
@@ -103,8 +93,8 @@ case $1 in
   create-user)
     create_user
     ;;
-  create-vector-table)
-    create_vector
+  create-vector-extension)
+    create_vector_extension
     ;;
   remove-user)
     remove_user
@@ -113,7 +103,7 @@ case $1 in
     remove_db
     ;;
   *)
-    echo "Usage: $0 {create-db|create-user|create-vector-table|remove-user|remove-db}"
+    echo "Usage: $0 {create-db|create-user|create-vector-extension|remove-user|remove-db}"
     exit 1
     ;;
 esac

@@ -10,3 +10,21 @@ button {
     font-size: 18px;
     color: blue;
 }
+
+.result-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.result-item {
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    width: 120px;
+}
+
+.result-item img {
+    border-radius: 5px;
+}
