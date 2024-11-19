@@ -1,6 +1,4 @@
 
-### TODO: Add usage instructions
-
 # Image Similarity Search Application
 
 This Google Lens like prototype has a image similarity search backend using FastAPI, Celery, Redis, and pgvector. For feature extraction, I’ve integrated pretrained models like OpenCLIP, ResNet, and VGG.
