@@ -20,3 +20,17 @@ remove-db:
 	bash init_db.sh remove-db
 
 init-db: create-db create-vector-extension create-user
+
+app-docker:
+	docker build -t image-similarity:latest --rm=true --force-rm=true .
+
+db-docker:
+	docker build -f db_docker/Dockerfile -t image-similarity-db:latest --rm=true --force-rm=true .
+
+make docker: db-docker app-docker
+
+run-compose:
+	docker compose up
+
+stop-compose:
+	docker compose down

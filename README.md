@@ -9,6 +9,7 @@ I have not done this yet but I plan to add Siamese networks and Autoencoder and 
 
 Another benchmarking that I need to do is to compare quantised model with the base models, to optimize latency without sacrificing much in terms of accuracy.
 
+The mini-test dataset: [https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small] (https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)
 
 ---
 
@@ -21,7 +22,19 @@ Another benchmarking that I need to do is to compare quantised model with the ba
 
 ---
 
-## Installation
+## Installation - Docker
+
+```
+make docker
+make run-compose
+
+# When you are done
+make stop-compose
+```
+
+---
+
+## Installation - Develop
 
 1. Clone the repository:
    ```bash

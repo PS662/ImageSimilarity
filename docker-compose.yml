@@ -1,7 +1,6 @@
 services:
   web:
-    build:
-      context: .
+    image: image-similarity:latest
     ports:
       - "8000:8000"
     env_file:
@@ -12,8 +11,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   celery:
-    build:
-      context: .
+    image: image-similarity:latest
     command: celery -A app.tasks worker --loglevel=info -c 4
     env_file:
       - .env
@@ -24,19 +22,19 @@ services:
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "6380:6379"
     env_file:
       - .env
     restart: always
 
   db:
-    image: postgres:14
+    image: image-similarity-db:latest
     environment:
       POSTGRES_USER: testuser
       POSTGRES_PASSWORD: Password123!
       POSTGRES_DB: image_similarity
     ports:
-      - "5432:5432"
+      - "5433:5432"
     env_file:
       - .env
     restart: always

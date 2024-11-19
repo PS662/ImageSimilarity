@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import numpy as np
 import os
 
+#load_dotenv(dotenv_path="./local.env")
 load_dotenv()
 
 DATABASE_URL = (
