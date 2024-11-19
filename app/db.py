@@ -4,8 +4,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import declarative_base, Session
 from sqlalchemy.ext.declarative import declared_attr
 from pgvector.sqlalchemy import Vector
+from sqlalchemy import cast, func, inspect
 from dotenv import load_dotenv
-from sqlalchemy import inspect
 import numpy as np
 import os
 
@@ -99,8 +99,7 @@ def save_vectors_bulk(vectors, model_id, model_type, model_dim, image_uris=None)
         session.bulk_insert_mappings(table_class, vector_dicts)
         session.commit()
         
-from sqlalchemy import cast, func
-from pgvector.sqlalchemy import Vector
+
 
 # FIXME: A lot can be improved
 def search_embeddings(query_vector, model_id, model_type, model_dim, top_k=10):

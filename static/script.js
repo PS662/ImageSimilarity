@@ -2,14 +2,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     await populateModelDropdown();
 });
 
-// Populate model ID dropdown
 async function populateModelDropdown() {
+    const modelLabel = document.createElement('label');
+    modelLabel.htmlFor = 'modelDropdown';
+    modelLabel.style.fontSize = '16px';
+    modelLabel.style.marginRight = '10px';
+
     const modelDropdown = document.createElement('select');
     modelDropdown.id = 'modelDropdown';
-    modelDropdown.style.margin = '10px';
+    modelDropdown.style.marginLeft = '10px';
 
     try {
-        const response = await fetch('/config/model_config.json'); // Load config
+        const response = await fetch('/config/model_config.json');
         if (!response.ok) {
             throw new Error(`Error fetching model config: ${response.statusText}`);
         }
@@ -25,12 +29,16 @@ async function populateModelDropdown() {
         alert(`Failed to load model IDs: ${error.message}`);
     }
 
-    const modelLabel = document.createElement('label');
-    modelLabel.htmlFor = 'modelDropdown';
-    modelLabel.textContent = 'Model ID:';
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.marginBottom = '20px'; 
 
-    document.body.insertBefore(modelLabel, document.body.firstChild);
-    document.body.insertBefore(modelDropdown, document.body.firstChild);
+    container.appendChild(modelLabel);
+    container.appendChild(modelDropdown);
+
+    const header = document.querySelector('h1');
+    document.body.insertBefore(container, header);
 }
 
 // Handle "Search With Image" button
