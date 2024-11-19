@@ -1,22 +1,34 @@
-version: "3.8"
 services:
   web:
-    build: .
+    build:
+      context: .
     ports:
       - "8000:8000"
     env_file:
       - .env
+    depends_on:
+      - db
+      - redis
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
   celery:
-    build: .
+    build:
+      context: .
     command: celery -A app.tasks worker --loglevel=info -c 4
     env_file:
       - .env
+    depends_on:
+      - db
+      - redis
+
   redis:
     image: redis:latest
     ports:
       - "6379:6379"
     env_file:
       - .env
+    restart: always
+
   db:
     image: postgres:14
     environment:
@@ -27,3 +39,4 @@ services:
       - "5432:5432"
     env_file:
       - .env
+    restart: always
