@@ -22,15 +22,7 @@ The mini-test dataset: [https://www.kaggle.com/datasets/paramaggarwal/fashion-pr
 
 ---
 
-## Installation - Docker
 
-```
-make docker
-make run-compose
-
-# When you are done
-make stop-compose
-```
 
 ---
 
@@ -109,20 +101,22 @@ The application will be available at `http://localhost:8000`.
 
 ## API Endpoints
 
-### 1. Upload a Catalog
-**Endpoint**: `POST /upload_catalogue`  
-**Parameters**:
-- `files`: A list of images to upload.
-- `model_id`: Model to use for embedding.
+`POST /upload_catalogue`  
 
-### 2. Search With Image
-**Endpoint**: `POST /search_with_image`  
-**Parameters**:
-- `file`: An image file for searching.
+`POST /search_with_image`  
+.
 
-### 3. Poll Task Status
-**Endpoint**: `GET /poll_task_status/{req_id}`  
-**Parameters**:
-- `req_id`: Task ID to check the status.
+`GET /poll_task_status/{req_id}`  
+
 
 - For additional models, update the `config/model_config.json` file. 
+
+## Installation - Docker - WIP, DNO NOT USE
+
+```
+make docker
+make run-compose
+
+# When you are done
+make stop-compose
+```
