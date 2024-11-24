@@ -1,17 +1,17 @@
 - [x] Handle model length, need to create a column per model-dim, tie with lazy loading
 - [x] OpenCLIP
 - [ ] LSH
-- [ ] README
+- [x] README
 - [ ] Finetune
 - [ ] Grid UI
-- [ ] Folder picker
+- [x] Folder picker
 - [ ] Add accessory detector
 - [ ] Model drift --> Need to update all embeddings
 
 - [ ] Two queues for search and update
 - [ ] Base64 Encoding
 - [ ] Batch
-- [ ] Env, docker-compose
+- [x] Env, docker-compose
 
 - [ ] tests, examples
 

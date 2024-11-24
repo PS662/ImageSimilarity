@@ -16,5 +16,11 @@
         "model_dim": 512,
         "model_id": "openclip_1",
         "model_path": "ViT-B-32"
+    },
+    {
+        "model_type": "openclip",
+        "model_dim": 512,
+        "model_id": "fashion_clip_1",
+        "model_subtype": "fashion_clip"
     }
 ]

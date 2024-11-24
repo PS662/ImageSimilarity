@@ -62,6 +62,7 @@ def fetch_embedding_table(model_type, model_dim):
         
     # FIXME: Dirty hack to get ORM working
     # Check if the ORM class is already defined
+    # Need to return object here and not hack it
     if table_name not in _emb_table_classes:
         # Dynamically create the ORM class with all necessary columns
         table_class = type(

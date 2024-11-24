@@ -3,3 +3,5 @@ __pycache__
 temp
 temp_test
 temp_catalogue
+
+evaluation/results/*

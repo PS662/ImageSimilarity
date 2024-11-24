@@ -3,6 +3,10 @@ services:
     image: image-similarity:latest
     ports:
       - "8000:8000"
+    volumes:
+      - ./:/app
+      - ./temp:/app/temp
+      - ./temp_catalogue:/app/temp_catalogue:rw
     env_file:
       - .env
     depends_on:
@@ -15,6 +19,10 @@ services:
     command: celery -A app.tasks worker --loglevel=info -c 4
     env_file:
       - .env
+    volumes:
+      - ./:/app
+      - ./temp:/app/temp
+      - ./temp_catalogue:/app/temp_catalogue:rw
     depends_on:
       - db
       - redis

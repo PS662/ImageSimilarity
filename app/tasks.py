@@ -26,8 +26,8 @@ def add_vector(folder_path, model_id=None):
         model_id = DEFAULT_MODEL_ID
 
     model = ModelLoader.load_model(model_id)
-    model_type = model_id.split("_")[0]
-    print(f"Using model id: {model_id}")
+    model_type = model.type
+    print(f"Add using model: {model_id} model_dim: {model.output_dim}, model_type: {model_type}")
     vectors = []
     image_uris = []
     for file in os.listdir(folder_path):
@@ -42,17 +42,17 @@ def add_vector(folder_path, model_id=None):
 
 
 @celery.task
-def search_vector(image_path, model_id=None):
+def search_vector(image_path, model_id=None, top_k = 100):
     if model_id is None:
         model_id = DEFAULT_MODEL_ID
 
     #FIXME: Encapsulate
     model = ModelLoader.load_model(model_id)
-    model_type = model_id.split("_")[0]
-    print(f"Search image: {image_path} with model: {model_id} model_dim: {model.output_dim}")
+    model_type = model.type
+    print(f"Search image: {image_path} with model: {model_id} model_dim: {model.output_dim}, model_type: {model_type}")
 
     query_vector = model.extract_features(image_path)
-    results = search_embeddings(query_vector, model_id, model_type, model.output_dim)
+    results = search_embeddings(query_vector, model_id, model_type, model.output_dim, top_k=top_k)
 
     print(f"Final results: {results}")
     return results
