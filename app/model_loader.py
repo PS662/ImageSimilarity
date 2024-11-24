@@ -61,7 +61,15 @@ class ResNet50Model(BaseModel):
 class VGG16Model(BaseModel):
     def __init__(self):
         self.model = vgg16(weights=VGG16_Weights.DEFAULT)
-        self.model = nn.Sequential(*list(self.model.children())[:-1])
+        # FIXME: VGG16 does not yield 4096 in the last layer, you would get 7 x 7 x 512
+        # We are interested in 4096 len feature vector hence this hack.
+        # 7x7x512 = 25088
+        self.model = nn.Sequential(
+            *list(self.model.children())[:-1],
+            nn.Flatten(), 
+            nn.Linear(25088, 4096), 
+            nn.ReLU() 
+        )
         self.model.eval()
 
     def preprocess(self):
@@ -76,7 +84,10 @@ class VGG16Model(BaseModel):
         input_tensor = self.preprocess()(img).unsqueeze(0)
         with torch.no_grad():
             features = self.model(input_tensor)
-        return features.squeeze().numpy()
+        flattened_features = features.squeeze().numpy()
+        print(f"Flattened features shape: {flattened_features.shape}")
+        return flattened_features
+
 
 
 class OpenCLIPModel(BaseModel):
@@ -122,6 +133,7 @@ class ModelLoader:
             model = OpenCLIPModel(model_info["model_path"])
         else:
             raise ValueError(f"Unsupported model type: {model_type}")
-
+        
+        model.output_dim = model_dim
         _loaded_models[model_id] = model
         return model

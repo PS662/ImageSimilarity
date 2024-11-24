@@ -30,12 +30,16 @@ async def read_root(request: Request):  # Use Request from starlette
 
 # FIXME: Add base64 encoded search
 @app.post("/search_with_image")
-async def search_with_image(file: UploadFile):
+async def search_with_image(file: UploadFile,
+                            model_id: str = Form(None)):
+    print(f"Received model_id: {model_id}")  # Debug line
+    if not model_id:
+        raise HTTPException(status_code=400, detail="model_id is required")
     temp_path = f"temp/{file.filename}"
     try:
         with open(temp_path, "wb") as f:
             f.write(file.file.read())
-        task = search_vector.delay(temp_path)
+        task = search_vector.delay(temp_path, model_id)
         return {"task_id": task.id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Task failed: {str(e)}")
@@ -45,8 +49,7 @@ async def search_with_image(file: UploadFile):
 @router.post("/upload_catalogue")
 async def upload_catalogue(
     files: List[UploadFile],
-    model_id: str = Form(None)
-):
+    model_id: str = Form(None)):
     try:
         print(f"Files received: {[file.filename for file in files]}")
         print(f"Model ID: {model_id}")

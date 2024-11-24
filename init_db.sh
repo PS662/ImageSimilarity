@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source .env
+#source .env
+source local.env
 DB_ADMIN_USER=${PSQL_ADMIN}
 DB_ADMIN_PASSWORD=${PSQL_ADMIN_PASSWORD}
 

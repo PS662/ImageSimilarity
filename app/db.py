@@ -103,7 +103,7 @@ def save_vectors_bulk(vectors, model_id, model_type, model_dim, image_uris=None)
 
 
 # FIXME: A lot can be improved
-def search_embeddings(query_vector, model_id, model_type, model_dim, top_k=10):
+def search_embeddings(query_vector, model_id, model_type, model_dim, top_k=100):
 
     query_vector = query_vector.tolist() # Slow
     query_vector_cast = cast(query_vector, Vector(model_dim)) #FIXME: Hack

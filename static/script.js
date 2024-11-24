@@ -41,48 +41,6 @@ async function populateModelDropdown() {
     document.body.insertBefore(container, header);
 }
 
-// Handle "Search With Image" button
-document.getElementById('imageSearchButton').addEventListener('click', async () => {
-    document.getElementById('loading').style.display = 'block';
-
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-
-    fileInput.onchange = async () => {
-        const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
-
-        const modelId = document.getElementById('modelDropdown').value; // Get selected model
-        if (modelId) {
-            formData.append('model_id', modelId);
-        }
-
-        try {
-            const response = await fetch('/search_with_image', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            if (!data.task_id) {
-                throw new Error('Task ID is missing from the response.');
-            }
-
-            pollTaskStatus(data.task_id);
-        } catch (error) {
-            document.getElementById('loading').style.display = 'none';
-            alert(`Error: ${error.message}`);
-        }
-    };
-
-    fileInput.click();
-});
-
 document.getElementById('updateCatalogueButton').addEventListener('click', async () => {
     const folderInput = document.createElement('input');
     folderInput.type = 'file';
@@ -125,6 +83,48 @@ document.getElementById('updateCatalogueButton').addEventListener('click', async
     folderInput.click();
 });
 
+// Handle "Search With Image" button
+document.getElementById('imageSearchButton').addEventListener('click', async () => {
+    document.getElementById('loading').style.display = 'block';
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+
+    fileInput.onchange = async () => {
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        const modelId = document.getElementById('modelDropdown').value; // Get selected model
+        if (modelId) {
+            formData.append('model_id', modelId);
+        }
+
+        try {
+            const response = await fetch('/search_with_image', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (!data.task_id) {
+                throw new Error('Task ID is missing from the response.');
+            }
+
+            pollTaskStatus(data.task_id);
+        } catch (error) {
+            document.getElementById('loading').style.display = 'none';
+            alert(`Error: ${error.message}`);
+        }
+    };
+
+    fileInput.click();
+});
+
 // Poll task status
 function pollTaskStatus(taskId) {
     const interval = setInterval(async () => {
@@ -139,7 +139,24 @@ function pollTaskStatus(taskId) {
             if (data.status === 'SUCCESS') {
                 clearInterval(interval);
                 document.getElementById('loading').style.display = 'none';
+
+                if (!data.result || data.result.error) {
+                    // Alert if there's an error or no valid results
+                    alert(data.result.error || "No valid results returned.");
+                    displayNoResults(data.result.error || "No valid results returned.");
+                    return;
+                }
+
+                if (!Array.isArray(data.result)) {
+                    // Alert if the result is not an array
+                    alert("Unexpected result format received. Please try again.");
+                    displayNoResults("Unexpected result format received.");
+                    return;
+                }
+
+                // If all checks pass, display the results
                 displaySearchResults(data.result);
+
             } else if (data.status === 'FAILURE') {
                 clearInterval(interval);
                 document.getElementById('loading').style.display = 'none';
@@ -192,3 +209,21 @@ function displaySearchResults(results) {
         document.body.appendChild(container);
     }
 }
+
+// Handle no results case
+function displayNoResults(errorMessage) {
+    const container = document.createElement('div');
+    container.className = 'no-results';
+
+    const message = document.createElement('p');
+    message.textContent = `No results found: ${errorMessage}`;
+    message.style.color = 'red';
+
+    const existingGrid = document.querySelector('.result-grid') || document.querySelector('.no-results');
+    if (existingGrid) {
+        existingGrid.replaceWith(container);
+    } else {
+        document.body.appendChild(container);
+    }
+}
+

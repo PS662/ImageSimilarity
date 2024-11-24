@@ -10,7 +10,6 @@ celery = Celery('tasks',
                 broker=os.getenv("REDIS_URL"),
                 backend=os.getenv("REDIS_URL"))
 
-#FIXME: Add more models, add base class
 @celery.task
 def vectorize_image(image_path, model_id=None):
     if model_id is None:
@@ -28,8 +27,7 @@ def add_vector(folder_path, model_id=None):
 
     model = ModelLoader.load_model(model_id)
     model_type = model_id.split("_")[0]
-    model_dim = getattr(model, "output_dim", 2048)
-
+    print(f"Using model id: {model_id}")
     vectors = []
     image_uris = []
     for file in os.listdir(folder_path):
@@ -39,7 +37,7 @@ def add_vector(folder_path, model_id=None):
         vectors.append(vector)
         image_uris.append(file_path)
 
-    save_vectors_bulk(vectors, model_id, model_type, model_dim, image_uris=image_uris)
+    save_vectors_bulk(vectors, model_id, model_type, model.output_dim, image_uris=image_uris)
     return "Catalogue updated successfully"
 
 
@@ -49,13 +47,12 @@ def search_vector(image_path, model_id=None):
         model_id = DEFAULT_MODEL_ID
 
     #FIXME: Encapsulate
-    print(f"Search image: {image_path} with model: {model_id}")
     model = ModelLoader.load_model(model_id)
     model_type = model_id.split("_")[0]
-    model_dim = getattr(model, "output_dim", 2048)
+    print(f"Search image: {image_path} with model: {model_id} model_dim: {model.output_dim}")
 
     query_vector = model.extract_features(image_path)
-    results = search_embeddings(query_vector, model_id, model_type, model_dim)
+    results = search_embeddings(query_vector, model_id, model_type, model.output_dim)
 
     print(f"Final results: {results}")
     return results
