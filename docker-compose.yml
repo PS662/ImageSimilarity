@@ -28,13 +28,18 @@ services:
     restart: always
 
   db:
-    image: image-similarity-db:latest
+    image: ankane/pgvector
     environment:
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: Password123!
-      POSTGRES_DB: image_similarity
+      DB_NAME: image_similarity
+      DB_USER: testuser
+      DB_PASSWORD: Password123
+      POSTGRES_PASSWORD: Password123
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - "5433:5432"
-    env_file:
-      - .env
+      - "5432:5432"
+    volumes:
+      - image_similarity_db:/opt/postgres-servers/image-similarity
     restart: always
+
+volumes:
+  image_similarity_db:

@@ -1,16 +1,38 @@
 #!/bin/bash
 
-#source .env
-source local.env
+check_env_var() {
+  local var_name="$1"
+  if [[ -z "${!var_name}" ]]; then
+    echo "Error: Environment variable '$var_name' is not set!"
+    exit 1
+  fi
+}
+
+required_env_vars=(
+  "PSQL_ADMIN"
+  "PSQL_ADMIN_PASSWORD"
+  "DB_NAME"
+  "DB_HOST"
+  "DB_PORT"
+  "DB_USER"
+  "DB_PASSWORD"
+)
+
+for var in "${required_env_vars[@]}"; do
+  check_env_var "$var"
+done
+
+echo "Database Vars: $DB_HOST PORT: $DB_PORT"
+
 DB_ADMIN_USER=${PSQL_ADMIN}
 DB_ADMIN_PASSWORD=${PSQL_ADMIN_PASSWORD}
 
-DB_NAME=${DB_NAME:-image_similarity}
-DB_HOST=${DB_HOST:-localhost}
-DB_PORT=${DB_PORT:-5432}
+DB_NAME=${DB_NAME}
+DB_HOST=${DB_HOST}
+DB_PORT=${DB_PORT}
 
-TEST_USER=${DB_USER:-"testuser"}
-TEST_PASSWORD=${DB_PASSWORD:-"password"}
+TEST_USER=${DB_USER}
+TEST_PASSWORD=${DB_PASSWORD}
 
 export PGPASSWORD=${DB_ADMIN_PASSWORD}
 
@@ -57,6 +79,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO $TEST_USE
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $TEST_USER;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $TEST_USER;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO $TEST_USER;
+GRANT ALL PRIVILEGES ON SCHEMA public TO $TEST_USER;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO $TEST_USER;
 SQL
   echo "Privileges granted successfully."
 }

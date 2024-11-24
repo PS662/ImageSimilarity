@@ -22,7 +22,19 @@ The mini-test dataset: [https://www.kaggle.com/datasets/paramaggarwal/fashion-pr
 
 ---
 
+## Installation - Docker
 
+```
+make docker-app-image
+make run-compose
+
+# If you are running for the first time
+source set_bash_env.sh
+make init-db 
+
+# When you are done
+make stop-compose
+```
 
 ---
 
@@ -110,13 +122,3 @@ The application will be available at `http://localhost:8000`.
 
 
 - For additional models, update the `config/model_config.json` file. 
-
-## Installation - Docker - WIP, DNO NOT USE
-
-```
-make docker
-make run-compose
-
-# When you are done
-make stop-compose
-```

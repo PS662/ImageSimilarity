@@ -1,5 +1,3 @@
--include local.env
-
 run-app:
 	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
@@ -23,16 +21,18 @@ remove-db:
 
 init-db: create-db create-vector-extension create-user
 
-app-docker:
-	docker build -t image-similarity:latest --rm=true --force-rm=true .
-
 db-bash:
 	PGPASSWORD=$(PSQL_ADMIN_PASSWORD) psql -h $(DB_HOST) -U $(PSQL_ADMIN) -p $(DB_PORT) -d $(DB_NAME)
 
-db-docker:
-	docker build -f db_docker/Dockerfile -t image-similarity-db:latest --rm=true --force-rm=true .
+#### Dockerize
+APP_IMAGE?=image-similarity:latest
+DB_IMAGE?=image-similarity-db:latest
 
-make docker: db-docker app-docker
+docker-app-image:
+	docker build -t ${APP_IMAGE} --rm=true --force-rm=true .
+
+bash-app-image:
+	docker run --rm -it ${APP_IMAGE} /bin/bash
 
 run-compose:
 	docker compose up
