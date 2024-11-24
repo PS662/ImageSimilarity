@@ -26,7 +26,6 @@ db-bash:
 
 #### Dockerize
 APP_IMAGE?=image-similarity:latest
-DB_IMAGE?=image-similarity-db:latest
 
 docker-app-image:
 	docker build -t ${APP_IMAGE} --rm=true --force-rm=true .
