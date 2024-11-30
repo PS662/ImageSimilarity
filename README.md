@@ -7,7 +7,9 @@ For similarity search, I opted to use pgvector over Locality Sensitive Hashing. 
 
 Another benchmarking that I need to do is to compare quantised model with the base models, to optimize latency without sacrificing much in terms of accuracy.
 
-The mini-test dataset: [https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small] (https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)
+The mini-test dataset: [https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)
+
+Walkthrough:[https://www.loom.com/share/9f3236f22aec4606b059af9f1b91752a?sid=d29b0a1a-41d1-49fe-bd07-f3bf508b4c08](https://www.loom.com/share/9f3236f22aec4606b059af9f1b91752a?sid=d29b0a1a-41d1-49fe-bd07-f3bf508b4c08)
 
 ---
 
