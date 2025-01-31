@@ -5,12 +5,9 @@ from sqlalchemy.orm import declarative_base, Session
 from sqlalchemy.ext.declarative import declared_attr
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import cast, func, inspect
-from dotenv import load_dotenv
 import numpy as np
 import os
 
-#load_dotenv(dotenv_path="./local.env")
-#load_dotenv()
 
 DATABASE_URL = (
     f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
